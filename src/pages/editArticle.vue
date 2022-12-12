@@ -1,25 +1,136 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { IEditorConfig } from '@wangeditor/editor'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { ElMessage } from 'element-plus'
+import Compressor from 'compressorjs'
+import { uploadFile } from '~/api/upload'
+
 const mode = 'default'
 const editorRef = shallowRef()
-const valueHtml = ref('<p>hello</p>')
-const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入内容...' }
+
+// 去除视频上传
+const toolbarConfig = {
+  excludeKeys: ['insertVideo', 'uploadVideo', 'group-video']
+}
+
+// 编辑器配置
+const editorConfig: Partial<IEditorConfig> = { 
+  placeholder: '请输入内容...',
+  MENU_CONF: {}
+}
+
+// 自定义上传图片
+editorConfig.MENU_CONF['uploadImage'] = {
+  async customUpload(file: File, insertFn: any) {
+    const fileName = file.name
+    const m = fileName.match(/\.(\w+)(#|\?|$)/)
+    const fileType = (m && m[1]).toString().toLowerCase()
+    const allowType = ['jpg', 'jpeg', 'png']
+    const validType = (allowType).includes(fileType)
+    if(!validType) {
+      ElMessage.error("仅支持'.jpg'、'.jpeg'、'.png'格式的图片")
+      return false
+    }
+    if(file.size / 1024 / 1024 > 5) {
+      ElMessage.error("图片大小不能超过5MB！")
+      return false
+    }
+    new Compressor(file, {
+      // 压缩图片
+      quality: 0.6,
+      convertTypes: ['image/png', 'image/jpg'],
+      convertSize: 1000000,
+      success(result: any) {
+        const formData = new FormData()
+        formData.append('file', result, result.name)
+        uploadImage(formData).then((res: any) => {
+          insertFn(res)
+        }).catch((error) => {
+          return false
+        })
+      },
+      error(err) {
+        ElMessage.error(err.message)
+        return false
+      }
+    })
+  }
+}
+// 上传图片
+function uploadImage(file: FormData) {
+  return new Promise((resolve, reject) => {
+    uploadFile(file).then((res: any) => {
+      if(res.errno === 0) {
+        resolve(res.data[0].url)
+      } else {
+        ElMessage.error(res.msg)
+        resolve(res)
+      }
+    }).catch(error => {
+      ElMessage.error(error.msg)
+      resolve(error)
+    }) 
+  })
+}
+
+//链接
+// 自定义校验链接
+function checkLink(text: string, url: string): string | boolean | undefined {
+  if(!url) {
+    ElMessage.error('链接不能为空')
+    return 
+  }
+  if(url.indexOf('http') !== 0) {
+    ElMessage.error('链接必须以http/https开头')
+    return '链接必须以http/https开头'
+  }
+  return true
+}
+// 自定义转换链接url
+function parseLink(url: string): string {
+  if (url.indexOf('http') !== 0) {
+    console.log(url)
+    return `http://${url}`
+  }
+  return url
+}
+// 插入链接
+editorConfig.MENU_CONF['insertLink'] = {
+    checkLink: checkLink,
+    parseLinkUrl: parseLink,
+}
+// 更新链接
+editorConfig.MENU_CONF['editLink'] = {
+    checkLink: checkLink, 
+    parseLinkUrl: parseLink,
+}
+
+const postRequest = ref({
+  title: '',
+  content: '<p>hello</p>'
+})
+
+// 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if(editor === null) return;
   editor.destroy()
 })
+
 const handleCreated = (editor: any) => {
-  console.log('created', editor);
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
+
+//发布文章
+const onPost = () => {
+  console.log(postRequest.value.content)
+}
 </script>
 <template>
   <div
-    class="p-4 mx-auto mt-5 rounded w-80%"
+    class="p-4 mx-auto mt-5 rounded w-1100px"
     border="~ 1px solid #ccc"
     shadow="~ lg #ddd"
   >
@@ -28,10 +139,11 @@ const handleCreated = (editor: any) => {
     </div>
     <div class="mt-3 flex justify-between">
       <input
-        class="w-80% rounded py-2 px-3 title-input"
+        class="w-77% rounded py-2 px-3 title-input"
         style="border: 1px solid #ccc"
         focus:boder=" 1px solid #ccc"
         placeholder="请输入标题"
+        v-model="postRequest.title"
       />
       <span
         class="py-2 px-4 rounded text-hex-67C23A cursor-pointer keep-bottom"
@@ -42,6 +154,7 @@ const handleCreated = (editor: any) => {
       <span
         class="py-2 px-4 rounded text-hex-409EFF cursor-pointer post-bottom"
         border="~ 1px solid #409EFF"
+        @click="onPost"
       >
         发布文章
       </span>
@@ -55,7 +168,7 @@ const handleCreated = (editor: any) => {
       />
       <Editor
         style="height: 500px; overflow-y: hidden;"
-        v-model="valueHtml"
+        v-model="postRequest.content"
         :defaultConfig="editorConfig"
         :mode="mode"
         @onCreated="handleCreated"

@@ -28,7 +28,7 @@ const tableData = ref([
 </script>
 <template>
   <div
-    class="p-4 mx-auto mt-5 rounded w-80%"
+    class="p-4 mx-auto mt-5 rounded w-1100px"
     border="~ 1px solid #ccc"
     shadow="~ lg #ddd"
   >
