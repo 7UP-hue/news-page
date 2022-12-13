@@ -1,6 +1,7 @@
 // 封装axios
 import axios from 'axios'
-import {ElMessage} from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import router from '~/router'
 // 引入vant组件
 import { getToken, removeToken } from './cookie'
 const baseURL = 'http://meta.rick.icu'
@@ -27,6 +28,14 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: any) => {
     const res = response.data
+    if(res.code === 401) {
+      ElMessageBox.alert('检测到您的登录信息已过期，请重新登录',{
+        confirmButtonText: '确定',
+        callback: () => {
+          router.push('/login')
+        }
+      })
+    }
     return res
   },
   (error: any) => {

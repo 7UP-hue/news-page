@@ -29,7 +29,7 @@ const myLogin = () => {
     if(res.code === 200) {
       ElMessage.success('登录成功')
       setToken(res.token)
-      router.push('/editArticle')
+      router.push('/manage/editArticle')
     } else {
       ElMessage.error(res.msg)
     }
@@ -59,7 +59,13 @@ const submitLogin = async (formEl: FormInstance | undefined) => {
             <el-input placeholder="请输入用户名" :prefix-icon="User" v-model="loginRequest.username" />
           </el-form-item>
           <el-form-item prop="password">
-            <el-input placeholder="请输入密码" :prefix-icon="Lock" v-model="loginRequest.password" />
+            <el-input
+              placeholder="请输入密码"
+              type="password"
+              :prefix-icon="Lock"
+              v-model="loginRequest.password"
+              show-password
+            />
           </el-form-item>
           <el-form-item>
             <el-button

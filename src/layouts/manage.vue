@@ -17,13 +17,13 @@ watchEffect(() => {
   <div class="w-80% mx-auto flex justify-center mt-5">
     <span
       class="py-2 px-4 rounded cursor-pointer mr-5 flex items-center "
-      :class="currentPath!=='/editArticle'?'menu':'active-menu'"
-      @click="jump('/editArticle')"
+      :class="currentPath!=='/manage/editArticle'?'menu':'active-menu'"
+      @click="jump('/manage/editArticle')"
     ><el-icon class="mr-2"><Edit /></el-icon>发布文章</span>
     <span
       class="py-2 px-4 rounded cursor-pointer flex items-center"
-      :class="currentPath!=='/manageArticle'?'menu':'active-menu'"
-      @click="jump('/manageArticle')"
+      :class="currentPath!=='/manage/manageArticle'?'menu':'active-menu'"
+      @click="jump('/manage/manageArticle')"
     ><el-icon class="mr-2"><Setting /></el-icon>管理文章</span>
   </div>
   <router-view />

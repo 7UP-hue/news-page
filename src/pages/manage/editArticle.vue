@@ -6,9 +6,14 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { ElMessage } from 'element-plus'
 import Compressor from 'compressorjs'
 import { uploadFile } from '~/api/upload'
+import { postArticle, editArticle, getArticleById } from '~/api/article'
+import { useRoute, useRouter } from 'vue-router'
 
 const mode = 'default'
 const editorRef = shallowRef()
+const showLoading = ref(true)
+const route = useRoute()
+const articleId = route.query.id
 
 // 去除视频上传
 const toolbarConfig = {
@@ -108,8 +113,10 @@ editorConfig.MENU_CONF['editLink'] = {
 }
 
 const postRequest = ref({
-  title: '',
-  content: '<p>hello</p>'
+  articleTitle: '',
+  articleContent: '<p>hello</p>',
+  id: '',
+  status: 1
 })
 
 // 组件销毁时，也及时销毁编辑器
@@ -125,8 +132,57 @@ const handleCreated = (editor: any) => {
 
 //发布文章
 const onPost = () => {
-  console.log(postRequest.value.content)
+  if(!postRequest.value.articleTitle) {
+    ElMessage.error('标题不能为空')
+  } else if(postRequest.value.articleContent === '<p><br></p>') {
+    ElMessage.error('内容不能为空')
+  } else {
+    showLoading.value = true
+    if(articleId !== null && articleId !== '' && articleId !== undefined) {
+      //修改文章
+      postRequest.value.id = articleId
+      editArticle(postRequest.value).then((res: any) => {
+        if(res.code === 200) {
+          ElMessage.success('修改成功')
+        } else {
+          ElMessage.error(res.message)
+        }
+      }).finally(() => {
+        showLoading.value = false
+      })
+    } else {
+      //发布文章
+      postArticle(postRequest.value).then((res: any) => {
+        if(res.code === 200) {
+          ElMessage.success('发布成功')
+        } else {
+          ElMessage.error(res.message)
+        }
+      }).finally(() => {
+        showLoading.value = false
+      })
+    }
+  }
 }
+
+const onSave = () => {
+  postRequest.value.status = 0
+  onPost()
+}
+
+onMounted(() => {
+  if(articleId !== null && articleId !== '' && articleId !== undefined) {
+    getArticleById(articleId).then((res: any) => {
+      if(res.code === 200) {
+        postRequest.value.articleTitle = res.data.articleTitle
+        postRequest.value.articleContent = res.data.articleContent
+        showLoading.value = false
+      }
+    })
+  } else {
+    showLoading.value = false
+  }
+})
 </script>
 <template>
   <div
@@ -143,11 +199,12 @@ const onPost = () => {
         style="border: 1px solid #ccc"
         focus:boder=" 1px solid #ccc"
         placeholder="请输入标题"
-        v-model="postRequest.title"
+        v-model="postRequest.articleTitle"
       />
       <span
         class="py-2 px-4 rounded text-hex-67C23A cursor-pointer keep-bottom"
         border="~ 1px solid #67C23A"
+        @click="onSave"
       >
         保存草稿
       </span>
@@ -159,7 +216,7 @@ const onPost = () => {
         发布文章
       </span>
     </div>
-    <div style="border: 1px solid #ccc" mt-5>
+    <div style="border: 1px solid #ccc" mt-5 v-loading="showLoading">
       <Toolbar
         style="border-bottom: 1px solid #ccc"
         :defaultConfig="toolbarConfig"
@@ -168,7 +225,7 @@ const onPost = () => {
       />
       <Editor
         style="height: 500px; overflow-y: hidden;"
-        v-model="postRequest.content"
+        v-model="postRequest.articleContent"
         :defaultConfig="editorConfig"
         :mode="mode"
         @onCreated="handleCreated"

@@ -2,10 +2,11 @@
   <main class="h-100%">
     <div class="my-container">
       <Header />
-      <div class="mt-5 flex">
+      <router-view />
+      <!-- <div class="mt-5 flex">
         <Aside />
         <router-view  class="w-880px"/>
-      </div>
+      </div> -->
     </div>
   </main>
 </template>

@@ -1,13 +1,30 @@
 <script lang="ts" setup>
-import { ref } from 'vue' 
-const menuList = ref([
-  { title: '主页'},
-  { title: '文章1'},
-  { title: '文章1'},
-  { title: '文章1'},
-  { title: '文章1'},
-  { title: '文章1'},
-])
+import { ref } from 'vue'
+import { getArticles } from '~/api/article'
+import { useRouter, useRoute } from 'vue-router'
+const menuList = ref([])
+const router = useRouter()
+const route = useRoute()
+const getMenus = () => {
+  getArticles({}).then((res: any) => {
+    if(res.code === 200) {
+      menuList.value = res.rows.map((value: any) => {
+        const temp = {
+          title: value.articleTitle,
+          id: value.id
+        }
+        return temp
+      })
+      if(route.path === '/article') {
+        router.replace(`/${menuList.value[0].id}`)
+      }
+    }
+  })
+}
+const jump = (item: any) => {
+  router.push(`/${item.id}`)
+}
+getMenus()
 </script>
 <template>
   <div class="w-200px mr-5">
@@ -19,6 +36,7 @@ const menuList = ref([
         text-white
         text-center
         font-600
+        @click="jump(item)"
       >
         {{item.title}}
       </div>
