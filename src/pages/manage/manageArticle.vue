@@ -17,7 +17,8 @@ const router = useRouter()
 const searchValue = ref({
   articleTitle: null,
   articleContent: null,
-  status: null
+  status: null,
+  createTime: null
 })
 const options = ref([
   {label: '待发布', value: '0'},

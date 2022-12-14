@@ -21,10 +21,15 @@ watchEffect(() => {
       @click="jump('/manage/editArticle')"
     ><el-icon class="mr-2"><Edit /></el-icon>发布文章</span>
     <span
-      class="py-2 px-4 rounded cursor-pointer flex items-center"
+      class="py-2 px-4 rounded cursor-pointer mr-5 flex items-center"
       :class="currentPath!=='/manage/manageArticle'?'menu':'active-menu'"
       @click="jump('/manage/manageArticle')"
-    ><el-icon class="mr-2"><Setting /></el-icon>管理文章</span>
+    ><el-icon class="mr-2"><Memo /></el-icon>文章管理</span>
+    <span
+      class="py-2 px-4 rounded cursor-pointer flex items-center"
+      :class="currentPath!=='/manage/managePage'?'menu':'active-menu'"
+      @click="jump('/manage/managePage')"
+    ><el-icon class="mr-2"><PieChart /></el-icon>页面管理</span>
   </div>
   <router-view />
 </template>
