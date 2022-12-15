@@ -65,7 +65,10 @@ const onDelete = (id: any) => {
     .then(() => {
       delPage(id).then((res: any) => {
         if(res.code === 200) {
-          ElMessage.success('删除成功')
+          ElMessage.success({
+            message: '删除成功',
+            duration: 1000
+          })
           getList()
         }
       })
@@ -99,7 +102,10 @@ const onConfirm = async (formEl: FormInstance | undefined) => {
           id: dialogData.value.id
         }).then((res: any) => {
           if(res.code === 200) {
-            ElMessage.success('编辑成功')
+            ElMessage.success({
+              message: '编辑成功',
+              duration: 1000
+            })
             getList()
           } else {
             ElMessage.error(res.msg)
@@ -113,7 +119,10 @@ const onConfirm = async (formEl: FormInstance | undefined) => {
           articleId: dialogData.value.articleId
         }).then((res: any) => {
           if(res.code === 200) {
-            ElMessage.success('新增成功')
+            ElMessage.success({
+              message: '新增成功',
+              duration: 1000
+            })
             getList()
           } else {
             ElMessage.error(res.msg)

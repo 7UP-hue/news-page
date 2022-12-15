@@ -27,7 +27,10 @@ const rules = reactive<FormRules>({
 const myLogin = () => {
   login(loginRequest.value).then((res: any) => {
     if(res.code === 200) {
-      ElMessage.success('登录成功')
+      ElMessage.success({
+        message: '登录成功',
+        duration: 1000
+      })
       setToken(res.token)
       router.push('/manage/editArticle')
     } else {

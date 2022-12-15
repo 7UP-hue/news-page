@@ -50,7 +50,10 @@ const onDelete = (id: any) => {
     .then(() => {
       delArticle(id).then((res: any) => {
         if(res.code === 200) {
-          ElMessage.success('删除成功')
+          ElMessage.success({
+            message: '删除成功',
+            duration: 1000,
+          })
           getList()
         }
       })
