@@ -1,0 +1,231 @@
+<script lang="ts" setup>
+import { onMounted, ref, reactive, nextTick } from "vue"
+import { getSchedules, delSchedule, editSchedule, addSchedule } from '~/api/date'
+import type { FormInstance, FormRules  } from 'element-plus'
+import { useRouter } from 'vue-router'
+import {
+  Delete,
+  Edit,
+  Search,
+  Refresh,
+  CirclePlus
+} from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from "element-plus"
+const tableData = ref([])
+const showLoading = ref(true)
+const searchForm = ref<FormInstance>()
+const dialogForm = ref<FormInstance>()
+const router = useRouter()
+const searchValue = ref({
+  scheduleContent: null,
+  scheduleTime: null,
+  status: null
+})
+const dialogData = ref({
+  isShow: false,
+  title: '编辑日程',
+  id: '',
+  scheduleContent: '',
+  scheduleTime: ''
+})
+const dialogFormRules = reactive<FormRules>({
+  scheduleContent: [
+    { required: true, message: '请输入日程名称' }
+  ],
+  scheduleTime: [
+    { required: true, message: '请选择日程文章' }
+  ]
+})
+
+/** 获取日程列表 */
+const getList = () => {
+  showLoading.value = true
+  getSchedules(searchValue.value).then((res: any) => {
+    if(res.code === 200) {
+      tableData.value = res.rows
+      showLoading.value = false
+    }
+  }).catch((err) => {
+    ElMessage.error(err.message)
+  })
+}
+/** 删除 */
+const onDelete = (id: any) => {
+  ElMessageBox.confirm(
+    '你确定删除id为'+id+'的日程吗',
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  )
+    .then(() => {
+      delSchedule(id).then((res: any) => {
+        if(res.code === 200) {
+          ElMessage.success({
+            message: '删除成功',
+            duration: 1000
+          })
+          getList()
+        }
+      })
+    }).catch(() => {
+      ElMessage('取消')
+    })
+}
+/** 重置 */
+const onReset = (formRef: any) => {
+  formRef.resetFields()
+}
+/** 编辑 */
+const onEdit = (item: any) => {
+  dialogData.value.isShow = true
+  nextTick(() => {
+    dialogData.value.title = '编辑日程'
+    dialogData.value.id = item.id
+    dialogData.value.scheduleContent = item.scheduleContent
+  })
+}
+// 确定编辑或确定修改
+const onConfirm = async (formEl: FormInstance | undefined) => {
+  if(!formEl) return 
+  await formEl.validate((valid, fields) => {
+    if(valid) {
+      if(dialogData.value.title === '编辑日程') {
+        editSchedule({
+          scheduleContent: dialogData.value.scheduleContent,
+          scheduleTime: dialogData.value.scheduleTime,
+          id: dialogData.value.id
+        }).then((res: any) => {
+          if(res.code === 200) {
+            ElMessage.success({
+              message: '编辑成功',
+              duration: 1000
+            })
+            getList()
+          } else {
+            ElMessage.error(res.msg)
+          }
+        }).finally(() => {
+          onCancel()
+        })
+      } else {
+        addSchedule({
+          scheduleContent: dialogData.value.scheduleContent,
+          scheduleTime: dialogData.value.scheduleTime
+        }).then((res: any) => {
+          if(res.code === 200) {
+            ElMessage.success({
+              message: '新增成功',
+              duration: 1000
+            })
+            getList()
+          } else {
+            ElMessage.error(res.msg)
+          }
+        }).finally(() => {
+          onCancel()
+        })
+      }
+    }
+  })
+}
+// 取消添加或取消修改
+const onCancel = () => {
+  console.log(dialogForm.value)
+  dialogForm.value?.resetFields()
+  dialogData.value.isShow = false
+}
+
+// 新增
+const onAdd = () => {
+  dialogData.value.title = '新增日程'
+  dialogData.value.isShow = true
+}
+
+onMounted(() => {
+  getList()
+  
+})
+</script>
+<template>
+  <div
+    class="p-4 mx-auto mt-5 rounded w-1100px"
+    border="~ 1px solid #ccc"
+    shadow="~ lg #ddd"
+  >
+    <div class="font-600 text-hex-333">
+      管理日程
+    </div>
+    <div class="mt-5">
+      <el-form
+        :inline="true" 
+        ref="searchForm"
+        :model="searchValue"
+      >
+        <el-form-item label="日程名称" prop="scheduleContent">
+          <el-input v-model="searchValue.scheduleContent" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="日程时间" prop="scheduleTime">
+          <el-input v-model="searchValue.scheduleTime" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="getList">
+            <el-icon class="mr-1"><Search /></el-icon>查询
+          </el-button>
+          <el-button type="default" size="small" @click="onReset(searchForm)">
+            <el-icon class="mr-1"><Refresh /></el-icon>重置
+          </el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="success" size="small" @click="onAdd">
+            <el-icon class="mr-1"><CirclePlus /></el-icon>新增
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="mt-3 p-1 min-h-70vh" border="~ 1px solid #ccc rounded" v-loading="showLoading">
+      <el-table :data="tableData">
+        <el-table-column prop="id" label="id" width="80px" />
+        <el-table-column prop="scheduleContent" label="日程名称" />
+        <el-table-column prop="scheduleTime" label="日程时间" />
+        <el-table-column prop="createTime" label="创建时间" />
+        <el-table-column prop="updateTime" label="最后更改时间" />
+        <el-table-column label="操作" align="center">
+          <template #default="scope">
+            <el-button :icon="Edit" type="primary" size="small" @click="onEdit(scope.row)">编辑</el-button>
+            <el-button :icon="Delete" type="danger" size="small" @click="onDelete(scope.row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="dialogData.isShow" :title="dialogData.title" :before-close="onCancel">
+      <el-form
+        ref="dialogForm"
+        :rules="dialogFormRules"
+        :model="dialogData"
+      >
+        <el-form-item label="日程名称" prop="scheduleContent">
+          <el-input placeholder="请输入日程名称" v-model="dialogData.scheduleContent" />
+        </el-form-item>
+        <el-form-item label="日程时间" prop="scheduleTime">
+          <el-input placeholder="请输入日程时间" v-model="dialogData.scheduleTime" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="onCancel()">取消</el-button>
+        <el-button @click="onConfirm(dialogForm)" type="primary">确定</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+<style>
+label {
+  font-weight: 700;
+}
+</style>
+<route lang="yaml">
+meta:
+  layout: manage
+</route>
