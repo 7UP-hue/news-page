@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "build": "rimraf dist && vite build",
+    "preview": "vite preview",
+    "deploy_prod": ".\\deploy.sh"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
