@@ -2,12 +2,14 @@
 import { onMounted, ref, onBeforeUnmount } from 'vue'
 import { getArticleById } from '~/api/article'
 import { getPages } from '~/api/page'
+import { getSchedules } from '~/api/date'
 import { useRouter, useRoute } from 'vue-router'
 const menuList = ref([])
 const router = useRouter()
 const route = useRoute()
 const articleId = ref('')
 const showBackTop = ref(false)
+const importantDateList = ref([])
 const detailValue = ref({
   articleTitle: '',
   articleContent: ''
@@ -76,6 +78,11 @@ onMounted(async () => {
     menuList.value = value
     getArticleDetail()
   })
+  getSchedules({}).then((res: any) => {
+    if(res.code === 200) {
+      importantDateList.value = res.rows
+    }
+  })
   window.addEventListener('scroll', handleScroll)
 })
 onBeforeUnmount(() => {
@@ -90,7 +97,7 @@ onBeforeUnmount(() => {
       </div>
       <div class="header-content py-7">
         <div class="flex justify-center text-3xl font-600 text-hex-811300">
-          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">Metaverse 2022</p>
+          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">Metaverse 2023</p>
         </div>
         <div class="flex justify-center font-600">
           <p class="py-3 px-5 header-name rounded-xl">Xi'an, June 25-27, 2022</p>
@@ -111,15 +118,38 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="bg-hex-F1F1F1 py-10 min-h-50vh">
-      <div class="w-1100px mx-auto bg-white text-3xl py-5 px-8 rounded text-center leading-relaxed tracking-wide">
-        {{detailValue.articleTitle}}
-      </div>
-      <div class="w-1100px mx-auto bg-white p-4 rounded min-h-200px mt-10">
-        <div v-html="detailValue.articleContent"></div>
-          <div v-if="detailValue.articleContent == ''" class="flex items-center justify-center">
-            <img src="../assets/暂无记录.png" class="w-30%">
-            <span class="text-lg text-hex-666">文章走丢啦,去看看别的吧~</span>
+      <div class="w-1100px mx-auto flex justify-between">
+        <div class="w-830px">
+          <div class="bg-white text-3xl py-5 px-8 rounded text-center leading-relaxed tracking-wide">
+            {{detailValue.articleTitle}}
           </div>
+          <div class="bg-white p-4 rounded min-h-200px mt-10">
+            <div v-html="detailValue.articleContent"></div>
+            <div v-if="detailValue.articleContent == ''" class="flex items-center justify-center">
+              <img src="../assets/暂无记录.png" class="w-30%">
+              <span class="text-lg text-hex-666">文章走丢啦,去看看别的吧~</span>
+            </div>
+          </div>
+          <div class="text-center bg-white py-3">
+            <div class="py-2 font-600 text-13px">Organizers:</div>
+            <img src="../assets/hnust-logo.png" class="w-110px" />
+            <img src="../assets/xtdx-logo.png" class="w-110px ml-5" />
+          </div>
+        </div>
+        <div class="w-240px">
+          <div class="rounded bg-white py-3 px-5 important-date">
+            <div class="important-content px-1 py-4 text-13px rounded">
+              IMPORTANT DATES
+            </div>
+            <div
+              v-for="item in importantDateList"
+              :key="item"
+              class="mt-3"
+            >
+              {{item.scheduleContent}}: {{item.scheduleTime}}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -141,6 +171,7 @@ onBeforeUnmount(() => {
 <style scoped>
 * {
   box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 .my-header {
   position: relative;
@@ -156,8 +187,8 @@ onBeforeUnmount(() => {
   background-color: rgba(255,255,255,.7);
 }
 .header-menu {
-  position: sticky;
-  top: -2px;
+  /* position: sticky;
+  top: -2px; */
   width: 100%;
   background: #1FA5E4;
 }
@@ -173,5 +204,16 @@ onBeforeUnmount(() => {
 .back-top:hover {
   border-radius: 50%;
   scale: 1.3;
+}
+.important-date {
+  position: relative;
+}
+.important-content {
+  left: -15px;
+  position: absolute;
+  writing-mode: vertical-rl;
+  background: #1FA5E4;
+  color: #fff;
+  transform: rotate(180deg);
 }
 </style>

@@ -3,11 +3,30 @@ import { onMounted, ref, onBeforeUnmount } from 'vue'
 import { getArticleById } from '~/api/article'
 import { getPages } from '~/api/page'
 import { useRouter, useRoute } from 'vue-router'
+import { getSchedules } from '~/api/date'
 const menuList = ref([])
 const router = useRouter()
 const route = useRoute()
 const articleId = ref('')
 const showBackTop = ref(false)
+const importantDateList = ref([
+  {
+    thing: 'Workshop Proposal',
+    data: 'July 15, 2022'
+  },
+  {
+    thing: 'Workshop Proposal',
+    data: 'July 15, 2022'
+  },
+  {
+    thing: 'Workshop Proposal',
+    data: 'July 15, 2022'
+  },
+  {
+    thing: 'Workshop Proposal',
+    data: 'July 15, 2022'
+  }
+])
 const detailValue = ref({
   articleTitle: '',
   articleContent: ''
@@ -53,6 +72,7 @@ const onChange = (item: any) => {
   articleId.value = item.articleId
   getArticleDetail()
 }
+
 // 回到顶部
 const backTop = () => {
   window.scrollTo({
@@ -75,6 +95,11 @@ onMounted(async () => {
     menuList.value = value
     getArticleDetail()
   })
+  getSchedules({}).then((res: any) => {
+    if(res.code === 200) {
+      importantDateList.value = res.rows
+    }
+  })
   window.addEventListener('scroll', handleScroll)
 })
 
@@ -88,8 +113,8 @@ onBeforeUnmount(() => {
       <div class="header">
         <img src="../assets/bg3.jpg" class="w-1100px">
       </div>
-      <div class="mt-5 flex">
-        <div class="w-200px mr-5">
+      <div class="mt-5 flex justify-between">
+        <div class="w-200px">
           <div
             v-for="item in menuList"
             :key="item"
@@ -102,7 +127,7 @@ onBeforeUnmount(() => {
             {{item.title}}
           </div>
         </div>
-        <div class="w-880px bg-white">
+        <div class="w-660px bg-white">
           <div class="bg-hex-0099D0 py-3 text-white text-center font-600 rounded">
             {{detailValue.articleTitle}}
           </div>
@@ -114,6 +139,25 @@ onBeforeUnmount(() => {
             <div v-if="detailValue.articleContent == ''" class="flex items-center justify-center">
               <img src="../assets/暂无记录.png" class="w-30%">
               <span class="text-lg text-hex-666">文章走丢啦,去看看别的吧~</span>
+            </div>
+          </div>
+          <div class="text-center bg-hex-F2F2F2 py-3">
+            <div class="py-2 font-600 text-13px">Organizers:</div>
+            <img src="../assets/hnust-logo.png" class="w-110px" />
+            <img src="../assets/xtdx-logo.png" class="w-110px ml-5" />
+          </div>
+        </div>
+        <div class="w-200px">
+          <div class="py-10px bg-hex-0099D0 text-white font-600 text-center">Important Dates</div>
+          <div class="border border-hex-00CCFF mt-1 text-center px-2 bg-hex-EEFFFF">
+            <div
+              v-for="(item, index) in importantDateList"
+              :key="item"
+              class="py-2"
+              :style="{borderTop: (index?'1px solid #00CCFF':'0')}"
+            >
+              <div>{{item.scheduleContent}}</div>
+              <div class="mt-1">{{item.scheduleTime}}</div>
             </div>
           </div>
         </div>
