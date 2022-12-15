@@ -53,7 +53,6 @@ const onChange = (item: any) => {
   articleId.value = item.articleId
   getArticleDetail()
 }
-
 // 回到顶部
 const backTop = () => {
   window.scrollTo({
@@ -78,48 +77,46 @@ onMounted(async () => {
   })
   window.addEventListener('scroll', handleScroll)
 })
+
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 </script>
 <template>
-  <div class="min-w-1100px">
-    <div class="my-header">
-      <div class="min-h-200px max-h-250px overflow-hidden">
-        <img src="../assets/bg.jpg" class="w-100% block">
+  <div class="bg-hex-F2F2F2">
+    <div class="my-container pb-10">
+      <div class="header">
+        <img src="../assets/bg3.jpg" class="w-1100px">
       </div>
-      <div class="header-content py-7">
-        <div class="flex justify-center text-3xl font-600 text-hex-811300">
-          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">Metaverse 2022</p>
-        </div>
-        <div class="flex justify-center font-600">
-          <p class="py-3 px-5 header-name rounded-xl">Xi'an, June 25-27, 2022</p>
-        </div>
-      </div>
-    </div>
-    <div class="header-menu">
-      <div class="menu-main w-1100px mx-auto flex flex-wrap justify-center font-600">
-        <span
-          class="py-3 text-white px-5 border-r-2 border-hex-7BF7FE cursor-pointer menu-items"
-          hover:color="#811300"
-          v-for="item in menuList"
-          :key="item"
-          @click="onChange(item)"
-        >
-          {{item.title}}
-        </span>
-      </div>
-    </div>
-    <div class="bg-hex-F1F1F1 py-10 min-h-50vh">
-      <div class="w-1100px mx-auto bg-white text-3xl py-5 px-8 rounded text-center leading-relaxed tracking-wide">
-        {{detailValue.articleTitle}}
-      </div>
-      <div class="w-1100px mx-auto bg-white p-4 rounded min-h-200px mt-10">
-        <div v-html="detailValue.articleContent"></div>
-          <div v-if="detailValue.articleContent == ''" class="flex items-center justify-center">
-            <img src="../assets/暂无记录.png" class="w-30%">
-            <span class="text-lg text-hex-666">文章走丢啦,去看看别的吧~</span>
+      <div class="mt-5 flex">
+        <div class="w-200px mr-5">
+          <div
+            v-for="item in menuList"
+            :key="item"
+            class="bg-hex-0099D0 menu-item"
+            text-white
+            text-center
+            font-600
+            @click="onChange(item)"
+          >
+            {{item.title}}
           </div>
+        </div>
+        <div class="w-880px bg-white">
+          <div class="bg-hex-0099D0 py-3 text-white text-center font-600 rounded">
+            {{detailValue.articleTitle}}
+          </div>
+          <div
+            class="min-h-300px mt-3 rounded p-3"
+            border="~ solid #00CCFF"
+          >
+            <div v-html="detailValue.articleContent"></div>
+            <div v-if="detailValue.articleContent == ''" class="flex items-center justify-center">
+              <img src="../assets/暂无记录.png" class="w-30%">
+              <span class="text-lg text-hex-666">文章走丢啦,去看看别的吧~</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -139,30 +136,19 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
+.menu-item {
+  cursor: pointer;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 1px;
 }
-.my-header {
+.menu-item:hover {
+  background: #0B66A6;
+}
+.my-container {
   position: relative;
-}
-.header-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
-}
-.header-name {
-  background-color: rgba(255,255,255,.7);
-}
-.header-menu {
-  position: sticky;
-  top: -2px;
-  width: 100%;
-  background: #1FA5E4;
-}
-.menu-items {
-  transition: all .5s;
+  width: 1100px;
+  margin: 0 auto;
 }
 .back-top {
   position: fixed;
