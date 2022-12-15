@@ -131,7 +131,8 @@ const handleCreated = (editor: any) => {
 };
 
 //发布文章
-const onPost = () => {
+const onPost = (status: any) => {
+  postRequest.value.status = status
   if(!postRequest.value.articleTitle) {
     ElMessage.error('标题不能为空')
   } else if(postRequest.value.articleContent === '<p><br></p>') {
@@ -143,7 +144,10 @@ const onPost = () => {
       postRequest.value.id = articleId
       editArticle(postRequest.value).then((res: any) => {
         if(res.code === 200) {
-          ElMessage.success('修改成功')
+          ElMessage.success({
+            message: '修改成功',
+            duration: 1000
+          })
         } else {
           ElMessage.error(res.message)
         }
@@ -154,7 +158,10 @@ const onPost = () => {
       //发布文章
       postArticle(postRequest.value).then((res: any) => {
         if(res.code === 200) {
-          ElMessage.success('发布成功')
+          ElMessage.success({
+            message: '发布成功',
+            duration: 1000
+          })
         } else {
           ElMessage.error(res.message)
         }
@@ -165,9 +172,10 @@ const onPost = () => {
   }
 }
 
+
 const onSave = () => {
   postRequest.value.status = 0
-  onPost()
+  onPost(0)
 }
 
 onMounted(() => {
@@ -211,7 +219,7 @@ onMounted(() => {
       <span
         class="py-2 px-4 rounded text-hex-409EFF cursor-pointer post-bottom"
         border="~ 1px solid #409EFF"
-        @click="onPost"
+        @click="onPost(1)"
       >
         发布文章
       </span>
