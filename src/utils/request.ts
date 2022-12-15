@@ -4,7 +4,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '~/router'
 // 引入vant组件
 import { getToken, removeToken } from './cookie'
-const baseURL = 'http://meta.rick.icu'
+// const baseURL = 'http://meta.rick.icu'
+const baseURL = 'http://meta.rick.icu/'
 // 创建axios实例
 const service = axios.create({
   // 请求路由
