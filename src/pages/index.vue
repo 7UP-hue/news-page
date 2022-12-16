@@ -97,10 +97,10 @@ onBeforeUnmount(() => {
       </div>
       <div class="header-content py-7">
         <div class="flex justify-center text-3xl font-600 text-hex-811300">
-          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">Metaverse 2023</p>
+          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">IEEE EDGECOM 2023</p>
         </div>
         <div class="flex justify-center font-600">
-          <p class="py-3 px-5 header-name rounded-xl">Xi'an, June 25-27, 2022</p>
+          <p class="py-3 px-5 header-name rounded-xl">Xiangtan, July 1, 2023</p>
         </div>
       </div>
     </div>
