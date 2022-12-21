@@ -16,7 +16,7 @@ const detailValue = ref({
 })
 function getMenus() {
   return new Promise((resolve, reject) => {
-    getPages({}).then((res: any) => {
+    getPages({pageNum: 1, pageSize: 100}).then((res: any) => {
       if(res.code === 200) {
         const menuList = res.rows.map((value: any) => {
           const temp = {
@@ -78,7 +78,7 @@ onMounted(async () => {
     menuList.value = value
     getArticleDetail()
   })
-  getSchedules({}).then((res: any) => {
+  getSchedules({pageNum: 1, pageSize: 100}).then((res: any) => {
     if(res.code === 200) {
       importantDateList.value = res.rows
     }

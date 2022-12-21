@@ -19,8 +19,12 @@ const router = useRouter()
 const searchValue = ref({
   scheduleContent: null,
   scheduleTime: null,
-  status: null
+  status: null,
+  pageNum: 1,
+  pageSize: 10
 })
+const pageNum = ref(1)
+const totalSize = ref(0)
 const dialogData = ref({
   isShow: false,
   title: '编辑日程',
@@ -40,8 +44,10 @@ const dialogFormRules = reactive<FormRules>({
 /** 获取日程列表 */
 const getList = () => {
   showLoading.value = true
+  searchValue.value.pageNum = pageNum.value
   getSchedules(searchValue.value).then((res: any) => {
     if(res.code === 200) {
+      totalSize.value = res.total
       tableData.value = res.rows
       showLoading.value = false
     }
@@ -199,6 +205,14 @@ onMounted(() => {
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-end mt-1">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="totalSize"
+          v-model:current-page="pageNum"
+          @current-change="getList"
+        />
+      </div>
     </div>
     <el-dialog v-model="dialogData.isShow" :title="dialogData.title" :before-close="onCancel">
       <el-form

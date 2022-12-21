@@ -21,8 +21,12 @@ const articleList = ref([])
 const searchValue = ref({
   pageName: null,
   articleContent: null,
-  status: null
+  status: null,
+  pageNum: 1,
+  pageSize: 10
 })
+const pageNum = ref(1)
+const totalSize = ref(0)
 const dialogData = ref({
   isShow: false,
   title: '编辑页面',
@@ -42,8 +46,10 @@ const dialogFormRules = reactive<FormRules>({
 /** 获取页面列表 */
 const getList = () => {
   showLoading.value = true
+  searchValue.value.pageNum = pageNum.value
   getPages(searchValue.value).then((res: any) => {
     if(res.code === 200) {
+      totalSize.value = res.total
       tableData.value = res.rows
       showLoading.value = false
     }
@@ -149,7 +155,7 @@ const onAdd = () => {
 
 onMounted(() => {
   getList()
-  getArticles({status: 1}).then((res: any) => {
+  getArticles({status: 1, pageNum: 1, pageSize: 100}).then((res: any) => {
     if(res.code === 200) {
       articleList.value = res.rows
     }
@@ -209,6 +215,14 @@ onMounted(() => {
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-end mt-1">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="totalSize"
+          v-model:current-page="pageNum"
+          @current-change="getList"
+        />
+      </div>
     </div>
     <el-dialog v-model="dialogData.isShow" :title="dialogData.title" :before-close="onCancel">
       <el-form

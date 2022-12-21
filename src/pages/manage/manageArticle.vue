@@ -18,8 +18,12 @@ const searchValue = ref({
   articleTitle: null,
   articleContent: null,
   status: null,
-  createTime: null
+  createTime: null,
+  pageSize: 10,
+  pageNum: 1
 })
+const pageNum = ref(1)
+const totalSize = ref(0)
 const options = ref([
   {label: '待发布', value: '0'},
   {label: '已发布', value: '1'}
@@ -27,8 +31,10 @@ const options = ref([
 /** 获取文章列表 */
 const getList = () => {
   showLoading.value = true
+  searchValue.value.pageNum = pageNum.value
   getArticles(searchValue.value).then((res: any) => {
     if(res.code === 200) {
+      totalSize.value = res.total
       tableData.value = res.rows
       showLoading.value = false
     }
@@ -140,6 +146,14 @@ onMounted(() => {
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-end mt-1">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="totalSize"
+          v-model:current-page="pageNum"
+          @current-change="getList"
+        />
+      </div>
     </div>
   </div>
 </template>
