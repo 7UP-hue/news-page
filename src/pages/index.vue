@@ -10,6 +10,7 @@ const route = useRoute()
 const articleId = ref('')
 const showBackTop = ref(false)
 const importantDateList = ref([])
+const isLoading = ref(true)
 const detailValue = ref({
   articleTitle: '',
   articleContent: ''
@@ -49,6 +50,7 @@ const getArticleDetail = () => {
       detailValue.value.articleTitle = '文章不存在'
       detailValue.value.articleContent = ''
     }
+    isLoading.value = false
   })
 }
 const onChange = (item: any) => {
@@ -100,12 +102,12 @@ onBeforeUnmount(() => {
           <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">IEEE EDGECOM 2023</p>
         </div>
         <div class="flex justify-center font-600">
-          <p class="py-3 px-5 header-name rounded-xl">Xiangtan, July 1, 2023</p>
+          <p class="py-3 px-5 header-name rounded-xl">Xiangtan, July 1-2, 2023</p>
         </div>
       </div>
     </div>
     <div class="header-menu">
-      <div class="menu-main w-1100px mx-auto flex flex-wrap justify-center font-600">
+      <div class="menu-main w-1300px mx-auto flex flex-wrap justify-center font-600">
         <span
           class="py-3 text-white px-5 border-r-2 border-hex-7BF7FE cursor-pointer menu-items"
           hover:color="#811300"
@@ -125,7 +127,7 @@ onBeforeUnmount(() => {
           </div>
           <div class="bg-white p-4 rounded min-h-200px mt-10">
             <div v-html="detailValue.articleContent"></div>
-            <div v-if="detailValue.articleContent == ''" class="flex items-center justify-center">
+            <div v-if="detailValue.articleContent == '' &&!isLoading" class="flex items-center justify-center">
               <img src="../assets/暂无记录.png" class="w-30%">
               <span class="text-lg text-hex-666">文章走丢啦,去看看别的吧~</span>
             </div>
