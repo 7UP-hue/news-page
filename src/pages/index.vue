@@ -133,9 +133,21 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="text-center bg-white py-3">
-            <div class="py-2 font-600 text-13px">Organizers:</div>
+            <!-- <div class="py-2 font-600 text-13px">Organizers:</div>
             <img src="../assets/hnust-logo.png" class="w-110px" />
-            <img src="../assets/xtdx-logo.png" class="w-110px ml-5" />
+            <img src="../assets/xtdx-logo.png" class="w-110px ml-5" /> -->
+            <a href="https://www.ieee.org/index.html" target="_blank" rel="noopener">
+              <img src="../assets/IEEE1.jpg" class="w-156px" />
+            </a>
+            <a href="https://www.computer.org/" target="_blank" rel="noopener" class="ml-3">
+              <img src="../assets/IEEE2.png" class="w-147px" />
+            </a>
+            <a href="https://www.computer.org/web/tandc/tcsc" target="_blank" rel="noopener" class="ml-3">
+              <img src="../assets/IEEE3.png" class="w-87px" />
+            </a>
+            <a href="https://www.computer.org/web/stc-smart-computing" target="_blank" rel="noopener" class="ml-3">
+              <img src="../assets/stcsmart.png" class="w-233px" />
+            </a>
           </div>
         </div>
         <div class="w-240px">
