@@ -27,4 +27,5 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
+  base: '/Edgecom/2023'
 })
