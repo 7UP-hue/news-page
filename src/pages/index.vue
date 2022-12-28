@@ -4,6 +4,11 @@ import { getArticleById } from '~/api/article'
 import { getPages } from '~/api/page'
 import { getSchedules } from '~/api/date'
 import { useRouter, useRoute } from 'vue-router'
+import bg1 from '../assets/bg.jpg'
+import bg2 from '../assets/bg2.jpg'
+import bg3 from '../assets/bg3.png'
+import bg4 from '../assets/bg4.jpg'
+import bg5 from '../assets/bg5.jpg'
 const menuList = ref([])
 const router = useRouter()
 const route = useRoute()
@@ -16,11 +21,11 @@ const detailValue = ref({
   articleContent: ''
 })
 const imgList = ref([
-  '../../src/assets/bg.jpg',
-  '../../src/assets/bg2.jpg',
-  '../../src/assets/bg3.png',
-  '../../src/assets/bg4.jpg',
-  '../../src/assets/bg5.jpg',
+  bg1,
+  bg2,
+  bg3,
+  bg4,
+  bg5
 ])
 function getMenus() {
   return new Promise((resolve, reject) => {
