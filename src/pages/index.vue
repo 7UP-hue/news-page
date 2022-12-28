@@ -15,6 +15,13 @@ const detailValue = ref({
   articleTitle: '',
   articleContent: ''
 })
+const imgList = ref([
+  '../../src/assets/bg.jpg',
+  '../../src/assets/bg2.jpg',
+  '../../src/assets/bg3.png',
+  '../../src/assets/bg4.jpg',
+  '../../src/assets/bg5.jpg',
+])
 function getMenus() {
   return new Promise((resolve, reject) => {
     getPages({pageNum: 1, pageSize: 100}).then((res: any) => {
@@ -95,7 +102,11 @@ onBeforeUnmount(() => {
   <div class="min-w-1100px">
     <div class="my-header">
       <div class="min-h-200px max-h-250px overflow-hidden">
-        <img src="../assets/bg.jpg" class="w-100% block">
+        <el-carousel trigger="click">
+          <el-carousel-item v-for="item in imgList" :key="item">
+            <img :src="item" class="w-100% block">
+          </el-carousel-item>
+        </el-carousel>
       </div>
       <div class="header-content py-7">
         <div class="flex justify-center text-3xl font-600 text-hex-811300">
