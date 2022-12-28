@@ -11,7 +11,7 @@ import { ElMain, ElMessage } from 'element-plus'
 export const routes = setupLayouts(generatedRoutes)
 
 const router = createRouter({
-  history: createWebHistory('/Edgecom/2023'),
+  history: createWebHistory('/cscloud/2023'),
   routes
 })
 

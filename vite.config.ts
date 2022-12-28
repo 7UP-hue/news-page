@@ -27,5 +27,5 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  base: '/Edgecom/2023'
+  base: '/cscloud/2023'
 })
