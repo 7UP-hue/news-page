@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
           <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">IEEE CSCloud 2023</p>
         </div>
         <div class="flex justify-center font-600">
-          <p class="py-3 px-5 header-name rounded-xl">Xiangtan, July 1-2, 2023</p>
+          <p class="py-3 px-5 header-name rounded-xl">Xiangtan, July 1-3, 2023</p>
         </div>
       </div>
     </div>
