@@ -5,7 +5,7 @@ import router from '~/router'
 // 引入vant组件
 import { getToken, removeToken } from './cookie'
 // const baseURL = 'http://meta.rick.icu'
-const baseURL = 'http://admin.cloud-conf.org/'
+const baseURL = import.meta.env.VITE_APP_REQUEST_URL
 // 创建axios实例
 const service = axios.create({
   // 请求路由

@@ -1,7 +1,7 @@
 #生产环境部署脚本
 
 #先构建项目，生成dist目录
-pnpm run build
+pnpm run build:cscloud
 
 #cd到构建的目录下
 cd dist

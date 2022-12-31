@@ -10,8 +10,10 @@ import { ElMain, ElMessage } from 'element-plus'
 
 export const routes = setupLayouts(generatedRoutes)
 
+const baseURL = import.meta.env.VITE_APP_BASE_URL //设置网址后缀 比如http://www.cloud-conf.org/cscloud/2023/
+
 const router = createRouter({
-  history: createWebHistory('/cscloud/2023'),
+  history: createWebHistory(baseURL),
   routes
 })
 

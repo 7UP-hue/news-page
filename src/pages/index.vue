@@ -16,6 +16,7 @@ const articleId = ref('')
 const showBackTop = ref(false)
 const importantDateList = ref([])
 const isLoading = ref(true)
+const webTitle = import.meta.env.VITE_APP_TITLE
 const detailValue = ref({
   articleTitle: '',
   articleContent: ''
@@ -115,7 +116,7 @@ onBeforeUnmount(() => {
       </div>
       <div class="header-content py-7">
         <div class="flex justify-center text-3xl font-600 text-hex-811300">
-          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">IEEE CSCloud 2023</p>
+          <p class="py-3 px-5 header-name rounded-xl mb-0 cursor-pointer">{{webTitle}}</p>
         </div>
         <div class="flex justify-center font-600">
           <p class="py-3 px-5 header-name rounded-xl">Xiangtan, July 1-3, 2023</p>
