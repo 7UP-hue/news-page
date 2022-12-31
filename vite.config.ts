@@ -27,5 +27,5 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  base: '/edgecom/2023' //设置网址后缀 比如http://www.cloud-conf.org/cscloud/2023/
+  base: '/cscloud/2023' //设置网址后缀 比如http://www.cloud-conf.org/cscloud/2023/
 })
