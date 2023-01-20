@@ -8,10 +8,12 @@
     "build": "rimraf dist && vite build --mode development",
     "build:cscloud": "rimraf dist && vite build --mode cscloud",
     "build:edge": "rimraf dist && vite build --mode edge",
+    "build:metaetc": "rimraf dist && vite build --mode metaetc",
     "preview": "vite preview",
     "deploy_prod": ".\\deploy.sh",
     "deploy_edge": ".\\deploy-edge.sh",
-    "deploy_cscloud": ".\\deploy-cscloud.sh"
+    "deploy_cscloud": ".\\deploy-cscloud.sh",
+    "deploy_metaetc": ".\\deploy-metaetc.sh"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
