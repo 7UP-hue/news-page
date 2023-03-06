@@ -15,6 +15,9 @@ export default defineConfig({
       '~/': `${path.resolve(__dirname, 'src')}/`,
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1500
+  },
   plugins: [
     vue(),
     Unocss(),
@@ -27,5 +30,5 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  base: '/cscloud/2023' //设置网址后缀 比如http://www.cloud-conf.org/cscloud/2023/
+  base: '/metaetc/2023' //设置网址后缀 比如http://www.cloud-conf.org/cscloud/2023/
 })

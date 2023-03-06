@@ -153,6 +153,9 @@ onBeforeUnmount(() => {
             <!-- <div class="py-2 font-600 text-13px">Organizers:</div>
             <img src="../assets/hnust-logo.png" class="w-110px" />
             <img src="../assets/xtdx-logo.png" class="w-110px ml-5" /> -->
+            <a href="https://computer.hnust.edu.cn/" target="_blank" rel="noopener" class="pr-2">
+              <img src="../assets/xueyuan.png" class="w-58px" />
+            </a>
             <a href="https://www.ieee.org/index.html" target="_blank" rel="noopener">
               <img src="../assets/IEEE1.jpg" class="w-156px" />
             </a>
